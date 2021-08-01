@@ -526,10 +526,6 @@ protected:
 			DONE;
 		}
 
-		#if (FASTLED_ALLOW_INTERRUPTS == 1)
-		// stop using the clock juggler
-		TCCR0A &= ~0x30;
-		#endif
 	}
 
 };
