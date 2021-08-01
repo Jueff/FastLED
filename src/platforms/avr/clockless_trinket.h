@@ -125,7 +125,13 @@ template<> __attribute__((always_inline)) inline void _dc<20>(register uint8_t &
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if (!defined(NO_CORRECTION) || (NO_CORRECTION == 0)) && (FASTLED_ALLOW_INTERRUPTS == 0)
+#if ((FASTLED_ALLOW_INTERRUPTS == 1) && defined(NO_CORRECTION) && (NO_CORRECTION == 1) && !(defined(NO_CLOCK_CORRECTION)))
+#	pragma message "In older versions of FastLED defining NO_CORRECTION 1 would mistakenly turn off color correction as well as clock correction."
+#	pragma message "Clock correction is unnecessary with FASTLED_ALLOW_INTERRUPTS 1. define NO_CLOCK_CORRECTION 1 to fix this warning."
+#	define NO_CLOCK_CORRECTION 1
+#endif
+
+#if (!defined(NO_CLOCK_CORRECTION) || (NO_CLOCK_CORRECTION == 0)) && (FASTLED_ALLOW_INTERRUPTS == 0)
 static uint8_t gTimeErrorAccum256ths;
 #endif
 
@@ -160,7 +166,7 @@ protected:
 		}
 
 		// Adjust the timer
-#if (!defined(NO_CORRECTION) || (NO_CORRECTION == 0)) && (FASTLED_ALLOW_INTERRUPTS == 0)
+#if (!defined(NO_CLOCK_CORRECTION) || (NO_CLOCK_CORRECTION == 0)) && (FASTLED_ALLOW_INTERRUPTS == 0)
         uint32_t microsTaken = (uint32_t)pixels.size() * (uint32_t)CLKS_TO_MICROS(24 * (T1 + T2 + T3));
 
         // adust for approximate observed actal runtime (as of January 2015)
