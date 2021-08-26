@@ -515,10 +515,10 @@ LIB8STATIC uint8_t blend8( uint8_t a, uint8_t b, uint8_t amountOfB)
         "  add %A[partial], r0           \n\t"
         "  adc %B[partial], r1           \n\t"
         "  clr __zero_reg__              \n\t"
-        : [partial] "=r" (partial)
-        : [amountOfB] "a" (amountOfB),
-          [a] "a" (a),
-          [b] "a" (b)
+        : [partial] "+r" (partial)
+        : [amountOfB] "r" (amountOfB),
+          [a] "r" (a),
+          [b] "r" (b)
         : "r0", "r1"
     );
 
